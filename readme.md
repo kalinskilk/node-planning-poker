@@ -1,6 +1,6 @@
 # A server JS/TS for NG-PLANNING-POKER
 
-## Repositórido Client
+## Repositório do Client
 
 https://github.com/kalinskilk/ng-planning-poker
 
