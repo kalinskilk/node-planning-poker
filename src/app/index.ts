@@ -68,10 +68,23 @@ io.on("connection", (socket: Socket) => {
     };
     io.emit(obj.roomId, dataRoom);
   });
+
+  socket.on("leave-room", (obj: { roomId: string; userName: string }) => {
+    const leaved = Room.leaveRoom(obj);
+    if (!leaved) {
+      return;
+    }
+    const dataRoom: IDataRoom = {
+      roomId: obj.roomId,
+      action: "USER_LEAVED",
+      data: { userName: obj.userName },
+    };
+    io.emit(obj.roomId, dataRoom);
+  });
 });
 
-http.listen(4444, () => {
-  console.log("Listening on port 4444");
+http.listen(process?.env?.PORT || 3000, () => {
+  console.log(`Listening on port ${process?.env?.PORT || 3000}`);
 });
 
 app.post("/create-new-room", (req: any, res: any) => {

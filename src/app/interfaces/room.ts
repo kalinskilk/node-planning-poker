@@ -6,4 +6,5 @@ export class IRoom {
   players: IPlayer[];
   votes: IVotesRoom[];
   blockVotes: boolean;
+  userCreator: IPlayer;
 }

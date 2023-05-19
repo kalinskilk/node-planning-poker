@@ -8,11 +8,13 @@ export class Rooms {
     const id = randomUUID();
     const room: IRoom = {
       id,
-      players: [player],
+      players: [],
       votes: [],
       blockVotes: false,
+      userCreator: player,
     };
     this.rooms.push(room);
+    console.log(this.rooms);
     return id;
   }
 
@@ -58,8 +60,17 @@ export class Rooms {
     if (!room) {
       return { success: false, message: "Room does not exists." };
     }
-    if (!room.players?.filter((el) => el.name === player.name).length) {
+    if (
+      !room.players?.filter(
+        (el) => el.name.toUpperCase() === player.name.toUpperCase()
+      ).length
+    ) {
       room.players.push(player);
+    } else {
+      return {
+        success: false,
+        message: "Nome de usuário em uso. Por favor use outro.",
+      };
     }
     return { success: true, message: "Success you are joined at room." };
   }
@@ -76,5 +87,25 @@ export class Rooms {
       data: { room: this.rooms.find((el) => el.id === roomId) || null },
       success: true,
     };
+  }
+
+  leaveRoom(input: { userName: string; roomId: string }): boolean {
+    const room = this.rooms.find((el) => el.id === input.roomId);
+    if (!room) {
+      return false;
+    }
+    const hasUser = room?.players.find((el) => el.name === input.userName);
+    if (!hasUser) {
+      return false;
+    }
+
+    room.players =
+      room?.players.filter((el) => el.name !== input.userName) || [];
+    if (!room.players.length) {
+      // NOT USERS ONLINE CLEAR ROOM
+      this.rooms = this.rooms.filter((el) => el.id !== input.roomId);
+    }
+
+    return true;
   }
 }
